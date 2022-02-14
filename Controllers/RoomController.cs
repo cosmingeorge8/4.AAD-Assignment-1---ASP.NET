@@ -1,6 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using RoomReservations.Models;
+using RoomReservations.Services;
 
 namespace RoomReservations.Controllers;
+
+/**
+ * @author Mucalau Cosmin
+ */
 
 [ApiController]
 [Route($"[controller]")]
@@ -15,12 +21,14 @@ public class RoomController : ControllerBase
     public ActionResult<List<Room>> GetAll() => RoomReservationService.GetAll();
 
     [HttpGet("id")]
-    public ActionResult<Room> Get(int Id)
+    public ActionResult<Room> Get(int id)
     {
-        var Room = RoomReservationService.Get(Id);
-        if(Room == null)
+        var room = RoomReservationService.Get(id);
+        if (room == null)
+        {
             return NotFound();
+        }
 
-        return Room;
+        return room;
     }
 }
