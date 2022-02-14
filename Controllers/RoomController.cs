@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 
+namespace RoomReservations.Controllers;
+
 [ApiController]
-[Route("[controller]")]
+[Route($"[controller]")]
 public class RoomController : ControllerBase
 {
     public RoomController()
@@ -20,5 +22,5 @@ public class RoomController : ControllerBase
             return NotFound();
 
         return Room;
-     }
+    }
 }
