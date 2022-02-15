@@ -1,13 +1,16 @@
-﻿
-namespace RoomReservations.Models;
+﻿namespace RoomReservations.Models;
+
+/**
+ * @author Mucalau Cosmin
+ */
 
 public class Reservation
 {
-    public Reservation(Room room, User user, DateOnly date)
+    public Reservation(Room room, User user, DateTime date)
     {
         Room = room;
         User = user;
-        Date = date.ToString();
+        Date = date;
     }
 
     public int Id { get; set; }
@@ -15,5 +18,5 @@ public class Reservation
 
     public User User { get; }
 
-    public String Date { get; }
+    public DateTime Date { get; }
 }

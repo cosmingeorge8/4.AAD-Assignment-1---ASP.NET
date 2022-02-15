@@ -1,8 +1,10 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using RoomReservations.Models;
+﻿using RoomReservations.Models;
 
 namespace RoomReservations.Services;
+
+/**
+ * @author Mucalau Cosmin
+ */
 
 public static class ReservationService
 {
@@ -14,19 +16,18 @@ public static class ReservationService
 
     private static Reservation? Get(int id) => _reservations.FirstOrDefault(r => r.Id == id);
 
-    public static Reservation Add(Room room, User user, string date)
+    public static Reservation Add(Room room, User user, DateTime date)
     {
          var reservation = CreateReservation(room, user, date);
         _reservations.Add(reservation);
         return reservation;
     }
 
-    private static Reservation CreateReservation(Room requestedRoom, User user, string date)
+    private static Reservation CreateReservation(Room requestedRoom, User user, DateTime date)
     {
-        var dateOnly = DateOnly.Parse(date);
         var room = RoomService.Get(requestedRoom.Id);
         
-        if (DateUtil.IsBeforeToday(dateOnly))
+        if (DateUtil.IsBeforeToday(date))
         {
             throw new Exception("Invalid date");
         }
@@ -35,16 +36,24 @@ public static class ReservationService
             throw new Exception("Room not found");
         }
 
-        if (!room.IsFree(DateUtil.GetStringAsDateOnly(date)))
+        if (!room.IsFree(date))
         {
             throw new Exception("Rooms is booked in " + date);
         }
 
-        var reservation = new Reservation(room, user, dateOnly)
+        var reservation = new Reservation(room, user, date)
         {
             Id = IdCounter++
         };
+
+        BookRoom(room, reservation);
         return reservation;
+    }
+
+    private static void BookRoom(Room room, Reservation reservation)
+    {
+        room.AddReservation(reservation);
+        _reservations.Add(reservation);
     }
 
     public static bool Delete(int id)
@@ -53,5 +62,4 @@ public static class ReservationService
         return reservation is not null && _reservations.Remove(reservation);
     }
     
-
 }

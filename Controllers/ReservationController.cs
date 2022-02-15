@@ -38,7 +38,7 @@ public class ReservationController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(Room room, string date)
+    public IActionResult Create(Room room, DateTime date)
     {
         var user = new User();
         Reservation created;
@@ -53,6 +53,5 @@ public class ReservationController : ControllerBase
         }
         return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
     }
- 
- 
+
 }

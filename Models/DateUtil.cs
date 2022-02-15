@@ -1,15 +1,19 @@
 ﻿namespace RoomReservations.Models;
 
+/**
+ * @author Mucalau Cosmin
+ */
+
 public static class DateUtil
 {
-    public static DateOnly GetToday()
+    public static DateTime GetToday()
     {
-        return DateOnly.FromDateTime(DateTime.Today);
+        return DateTime.Today;
     }
 
-    public static DateOnly GetToDate(TimeSpan timeSpan)
+    public static DateTime GetToDate(TimeSpan timeSpan)
     {
-        return DateOnly.FromDateTime(DateTime.Now.Add(timeSpan));
+        return DateTime.Now.Add(timeSpan);
     }
 
     public static DateOnly GetStringAsDateOnly(string date)
@@ -17,7 +21,7 @@ public static class DateUtil
         return DateOnly.Parse(date);
     }
 
-    public static bool IsBeforeToday(DateOnly date)
+    public static bool IsBeforeToday(DateTime date)
     {
         return date.CompareTo(GetToday()) < 0;
     }

@@ -40,16 +40,15 @@ public class RoomController : ControllerBase
     }
 
     [HttpGet("date")]
-    public ActionResult<List<Room>> GetFreeRooms(String date)
+    public ActionResult<List<Room>> GetFreeRooms(DateTime date)
     {
-        var dateOnly = DateOnly.Parse(date);
-        return RoomService.GetFreeRooms(dateOnly);
+        return RoomService.GetFreeRooms(date);
     }
     /**
      * Returns a list of al the rooms for the given period and their status
      */
     [HttpGet("period")]
-    public List<Dictionary<DateOnly, Reservation?>> GetByPeriod(TimeSpan timeSpan)
+    public List<Dictionary<DateTime, Reservation?>> GetByPeriod(TimeSpan timeSpan)
     {
         var availableRooms = RoomService.GetAllByPeriod(timeSpan);
 

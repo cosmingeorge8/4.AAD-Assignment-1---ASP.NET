@@ -6,25 +6,30 @@ namespace RoomReservations.Models;
 
 public class Room
 {
+    public int Floor { get; }
+
+    public string Description { get; }
+
     public int Id {get;set;}
+    
+    private Dictionary<DateTime, Reservation?> _reservations = new();
 
-    public int Floor {get;set;}
+    public Room(int floor, string description)
+    {
+        Floor = floor;
+        Description = description;
+    }
 
-    public string? Description {get;set;}
-
-    private Dictionary<DateOnly, Reservation?> _reservations = new();
-
-
-    private Reservation? GetByDate(DateOnly date)
+    private Reservation? GetByDate(DateTime date)
     {
         return _reservations.ContainsKey(date) ? _reservations[date] : null;
     }
-    public bool IsFree(DateOnly date)
+    public bool IsFree(DateTime date)
     {
         return GetByDate(date) == null;
     }
 
-    public bool Book(User user, DateOnly date)
+    public bool Book(User user, DateTime date)
     {
         if (IsFree(date))
         {
@@ -35,10 +40,10 @@ public class Room
         return true;
     }
 
-    public Dictionary<DateOnly, Reservation?> GetRoomStatus(TimeSpan timeSpan)
+    public Dictionary<DateTime, Reservation?> GetRoomStatus(TimeSpan timeSpan)
     {
-        var date = DateUtil.GetToday();
-        var reservations = new Dictionary<DateOnly, Reservation?>();
+        var date = DateTime.Now;
+        var reservations = new Dictionary<DateTime, Reservation?>();
         
         while (date < DateUtil.GetToDate(timeSpan))
         {
@@ -47,5 +52,10 @@ public class Room
         }
 
         return reservations;
+    }
+
+    public void AddReservation(Reservation reservation)
+    {
+        _reservations.Add(reservation.Date,reservation);
     }
 }
