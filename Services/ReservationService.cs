@@ -4,32 +4,46 @@ using RoomReservations.Models;
 
 namespace RoomReservations.Services;
 
-public class ReservationService
+public static class ReservationService
 {
-    private static List<Reservation> _reservations = new List<Reservation>();
+    private static readonly List<Reservation> _reservations = new();
 
     public static List<Reservation> GetAll() => _reservations;
-    
-    private static int _idCounter = 1;
 
-    public static Reservation? Get(int id) => _reservations.FirstOrDefault(r => r.Id == id);
+    private static int IdCounter = 1;
 
-    public static Reservation Add(Room room, User user, String date)
+    private static Reservation? Get(int id) => _reservations.FirstOrDefault(r => r.Id == id);
+
+    public static Reservation Add(Room room, User user, string date)
     {
          var reservation = CreateReservation(room, user, date);
         _reservations.Add(reservation);
         return reservation;
     }
 
-    private static Reservation CreateReservation(Room room, User user, string date)
+    private static Reservation CreateReservation(Room requestedRoom, User user, string date)
     {
         var dateOnly = DateOnly.Parse(date);
-        if (DateUtil.IsBeforeToday(date))
+        var room = RoomService.Get(requestedRoom.Id);
+        
+        if (DateUtil.IsBeforeToday(dateOnly))
         {
             throw new Exception("Invalid date");
         }
+        if (room is null)
+        {
+            throw new Exception("Room not found");
+        }
 
-        var reservation = new Reservation(room, user, dateOnly);
+        if (!room.IsFree(DateUtil.GetStringAsDateOnly(date)))
+        {
+            throw new Exception("Rooms is booked in " + date);
+        }
+
+        var reservation = new Reservation(room, user, dateOnly)
+        {
+            Id = IdCounter++
+        };
         return reservation;
     }
 
