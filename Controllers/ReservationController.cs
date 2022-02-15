@@ -37,15 +37,22 @@ public class ReservationController : ControllerBase
         return ReservationService.GetAll();
     }
 
+    /**
+     * Book a room on a given date
+     * Takes roomID and date as parameter
+     * Checks for values and tries to create a Reservation object
+     *
+     * returns created object
+     */
     [HttpPost]
-    public IActionResult Create(Room room, DateTime date)
+    public IActionResult Create(int roomId, DateTime date)
     {
         var user = new User();
         Reservation created;
 
         try
         {
-            created = ReservationService.Add(room, user, date);
+            created = ReservationService.Add(roomId, user, date);
         }
         catch (Exception e)
         {

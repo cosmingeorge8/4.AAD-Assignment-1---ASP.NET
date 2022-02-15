@@ -16,20 +16,18 @@ public static class ReservationService
 
     private static Reservation? Get(int id) => _reservations.FirstOrDefault(r => r.Id == id);
 
-    public static Reservation Add(Room room, User user, DateTime date)
+    public static Reservation Add(int roomId, User user, DateTime date)
     {
-         var reservation = CreateReservation(room, user, date);
-        _reservations.Add(reservation);
-        return reservation;
+        return CreateReservation(roomId, user, date);
     }
 
-    private static Reservation CreateReservation(Room requestedRoom, User user, DateTime date)
+    private static Reservation CreateReservation(int roomId, User user, DateTime date)
     {
-        var room = RoomService.Get(requestedRoom.Id);
+        var room = RoomService.Get(roomId);
         
         if (DateUtil.IsBeforeToday(date))
         {
-            throw new Exception("Invalid date");
+            throw new Exception("No time travel yet, so no past tense booking");
         }
         if (room is null)
         {
