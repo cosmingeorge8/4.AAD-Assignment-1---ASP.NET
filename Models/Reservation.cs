@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
+﻿
 namespace RoomReservations.Models;
 
 public class Reservation
@@ -8,7 +7,7 @@ public class Reservation
     {
         Room = room;
         User = user;
-        Date = date;
+        Date = date.ToString();
     }
 
     public int Id { get; set; }
@@ -16,5 +15,5 @@ public class Reservation
 
     public User User { get; }
 
-    public DateOnly Date { get; }
+    public String Date { get; }
 }
