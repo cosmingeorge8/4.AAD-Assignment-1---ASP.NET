@@ -10,7 +10,7 @@ public class Room
 
     public int Floor {get;set;}
 
-    public String? Description {get;set;}
+    public string? Description {get;set;}
 
     private Dictionary<DateOnly, Reservation?> _reservations = new();
 

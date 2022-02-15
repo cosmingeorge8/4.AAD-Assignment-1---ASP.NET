@@ -23,13 +23,13 @@ public class ReservationService
 
     private static Reservation CreateReservation(Room room, User user, string date)
     {
-        DateOnly dateOnly = DateOnly.Parse(date);
+        var dateOnly = DateOnly.Parse(date);
         if (DateUtil.IsBeforeToday(date))
         {
             throw new Exception("Invalid date");
         }
 
-        Reservation reservation = new Reservation(room, user, dateOnly);
+        var reservation = new Reservation(room, user, dateOnly);
         return reservation;
     }
 

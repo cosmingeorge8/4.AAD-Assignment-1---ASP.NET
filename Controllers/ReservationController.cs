@@ -38,20 +38,20 @@ public class ReservationController : ControllerBase
  }
 
  [HttpPost]
- public IActionResult Create(Room reservation, String date)
+ public IActionResult Create(Room room, string date)
  {
   var user = new User();
   Reservation created;
 
   try
   {
-   created = ReservationService.Add(reservation, user, date);
+   created = ReservationService.Add(room, user, date);
   }
   catch (Exception e)
   {
    return BadRequest(e);
   }
-  return CreatedAtAction(nameof(Create), new {id = created.Id}, reservation);
+  return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
  }
  
  
