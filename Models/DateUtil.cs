@@ -12,7 +12,12 @@ public static class DateUtil
         return DateOnly.FromDateTime(DateTime.Now.Add(timeSpan));
     }
 
-    public static bool IsBeforeToday(string date)
+    public static DateOnly GetStringAsDateOnly(string date)
+    {
+        return DateOnly.Parse(date);
+    }
+
+    public static bool IsBeforeToday(DateOnly date)
     {
         return date.CompareTo(GetToday()) < 0;
     }
