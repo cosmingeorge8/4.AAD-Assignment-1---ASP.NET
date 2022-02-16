@@ -8,13 +8,20 @@ namespace RoomReservations.Services;
 
 public static class ReservationService
 {
-    private static readonly List<Reservation> _reservations = new();
+    public static List<Reservation> GetAll()
+    {
+        List<Reservation> reservations = new List<Reservation>();
+        foreach (var room in RoomService.GetAll())
+        {
+            reservations.AddRange(room.GetAllReservations()!);
+        }
 
-    public static List<Reservation> GetAll() => _reservations;
+        return reservations;
+    }
 
     private static int IdCounter = 1;
 
-    private static Reservation? Get(int id) => _reservations.FirstOrDefault(r => r.Id == id);
+    public static Reservation? Get(int id) => GetAll().FirstOrDefault(r => r.Id == id);
 
     public static Reservation Add(int roomId, User user, DateTime date)
     {
@@ -51,13 +58,18 @@ public static class ReservationService
     private static void BookRoom(Room room, Reservation reservation)
     {
         room.AddReservation(reservation);
-        _reservations.Add(reservation);
     }
 
     public static bool Delete(int id)
     {
         var reservation = Get(id);
-        return reservation is not null && _reservations.Remove(reservation);
+        if (reservation is null)
+        {
+            return false;
+        }
+        reservation.Room.RemoveReservation(reservation);
+        return true;
+
     }
     
 }

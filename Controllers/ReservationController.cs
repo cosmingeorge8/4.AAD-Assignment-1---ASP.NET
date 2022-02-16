@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RoomReservations.Models;
 using RoomReservations.Services;
 
@@ -8,8 +9,9 @@ namespace RoomReservations.Controllers;
  * @author Mucalau Cosmin
  */
 
+[Authorize]
 [ApiController]
-[Route($"[controller]")]
+[Route("[controller]")]
 public class ReservationController : ControllerBase
 {
     public ReservationController()
@@ -21,7 +23,22 @@ public class ReservationController : ControllerBase
      */
     [HttpGet]
     public ActionResult<List<Reservation>> GetAll() => ReservationService.GetAll();
- 
+
+    /**
+     * Get a reservation by ID
+     */
+    [HttpGet("id")]
+    public ActionResult<Reservation> Get(int id)
+    {
+        var reservation = ReservationService.Get(id);
+        if (reservation is null)
+        {
+            return NotFound(id);
+        }
+
+        return reservation;
+    }
+
     /**
      * Delete a room with specified Id
      * Returns 404 if no rooms was found
