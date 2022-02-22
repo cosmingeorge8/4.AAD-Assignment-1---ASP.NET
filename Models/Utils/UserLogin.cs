@@ -1,6 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 
-namespace RoomReservations.Models;
+namespace RoomReservations.Models.Utils;
 
 /**
  * @author Mucalau Cosmin
@@ -13,6 +13,10 @@ public class UserLogin
 
     public string Password { get; set; }
 
+    /**
+     * Check for empty strings
+     * If either one is empty, method will return false
+     */
     public bool IsValid()
     {
        return !Username.IsNullOrEmpty() && !Password.IsNullOrEmpty();

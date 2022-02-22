@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoomReservations.Models;
 using RoomReservations.Services;
@@ -9,7 +10,7 @@ namespace RoomReservations.Controllers;
  */
 
 [ApiController]
-[Route($"[controller]")]
+[Route("[controller]")]
 public class RoomController : ControllerBase
 {
     public RoomController()
@@ -39,19 +40,24 @@ public class RoomController : ControllerBase
         return room;
     }
 
+    /**
+     * Returns a list of all the rooms free on given date
+     */
     [HttpGet("date")]
     public ActionResult<List<Room>> GetFreeRooms(DateTime date)
     {
         return RoomService.GetFreeRooms(date);
     }
+    
     /**
      * Returns a list of al the rooms for the given period and their status
      */
+    [Authorize]
     [HttpGet("period")]
-    public List<Dictionary<DateTime, Reservation?>> GetByPeriod(TimeSpan timeSpan)
+    public List<Dictionary<DateTime, Reservation?>> GetByPeriod(DateTime dateTime)
     {
-        var availableRooms = RoomService.GetAllByPeriod(timeSpan);
-
+        var availableRooms = RoomService.GetAllByPeriod(dateTime);
+        
         return availableRooms;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RoomReservations.Models;
+using RoomReservations.Models.Utils;
 using RoomReservations.Repositories;
 
 namespace RoomReservations.Services;

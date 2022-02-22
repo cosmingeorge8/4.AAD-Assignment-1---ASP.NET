@@ -100,12 +100,12 @@ public static class RoomService
     /**
      * Get a Collection of Dictionaries that list the status of a room per period
      */
-    public static List<Dictionary<DateTime, Reservation?>> GetAllByPeriod(TimeSpan timeSpan)
+    public static List<Dictionary<DateTime, Reservation?>> GetAllByPeriod(DateTime dateTime)
     {
         var rooms = new List<Dictionary<DateTime, Reservation?>>();
         foreach (var room in Rooms)
         {
-            rooms.Add(room.GetRoomStatus(timeSpan));
+            rooms.Add(room.GetRoomStatus(dateTime));
         }
 
         return rooms;
