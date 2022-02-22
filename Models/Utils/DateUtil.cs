@@ -1,4 +1,4 @@
-﻿namespace RoomReservations.Models;
+﻿namespace RoomReservations.Models.Utils;
 
 /**
  * @author Mucalau Cosmin
