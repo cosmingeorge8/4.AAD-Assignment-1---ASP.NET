@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RoomReservations.Models.Utils;
 
+const Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,7 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")!);
+    var path = Environment.GetFolderPath(folder);
+    var dbPath = Path.Join(path, "roomreservation.db");
+    options.UseSqlite($"Data Source={dbPath}");
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
