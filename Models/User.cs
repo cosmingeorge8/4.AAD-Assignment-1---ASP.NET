@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+
 namespace RoomReservations.Models;
 
 /**
@@ -9,7 +11,10 @@ namespace RoomReservations.Models;
  */
 public class User
 {
-    /**
+
+   public int Id { get; set; }
+
+ /**
      * Username, unique identifier of an user
      */
     public string Username { get; set; }
