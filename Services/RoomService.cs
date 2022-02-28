@@ -27,8 +27,8 @@ public static class RoomService
      */
     static RoomService() => Rooms = new List<Room>
     {
-        new(2, "lecture room"){Id= _idCounter++},
-        new(3,"seminar room"){Id= _idCounter++}
+        new(){Floor = 1, Description = "cool room", Id = _idCounter++},
+        new(){Floor = 2, Description = "garbage room", Id = _idCounter++},
     };
 
     /**
@@ -83,7 +83,7 @@ public static class RoomService
      */
     public static List<Room> GetFreeRooms(DateTime date)
     {
-        List<Room> rooms = new List<Room>();
+        var rooms = new List<Room>();
 
         foreach (var room in Rooms)
         {
