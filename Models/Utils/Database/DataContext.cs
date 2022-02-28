@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace RoomReservations.Models.Utils;
+namespace RoomReservations.Models.Utils.Database;
 
 public class DataContext : DbContext
 {
@@ -10,5 +10,5 @@ public class DataContext : DbContext
 
     public DbSet<User> Users { get; set; }
     
-    public DbSet<Room> Rooms { get; set; }
+    public DbSet<Room?> Rooms { get; set; }
 }

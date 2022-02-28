@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using RoomReservations.Models.Utils;
+using RoomReservations.Interfaces;
+using RoomReservations.Models.Utils.Database;
+using RoomReservations.Repositories;
 
 const Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
 
@@ -18,6 +20,9 @@ builder.Services.AddDbContext<DataContext>(options =>
     var dbPath = Path.Join(path, "roomreservation.db");
     options.UseSqlite($"Data Source={dbPath}");
 });
+
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

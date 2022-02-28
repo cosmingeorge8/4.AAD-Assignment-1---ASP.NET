@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RoomReservations.Interfaces;
 using RoomReservations.Models;
+using RoomReservations.Repositories;
 using RoomReservations.Services;
 
 namespace RoomReservations.Controllers;
@@ -13,16 +15,17 @@ namespace RoomReservations.Controllers;
 [Route("[controller]")]
 public class RoomController : ControllerBase
 {
-    public RoomController()
+    private readonly IRoomRepository _roomRepository;
+    public RoomController(IRoomRepository roomRepository)
     {
-
+        _roomRepository = roomRepository;
     }
 
     /**
      * Get a list of all rooms 
      */
     [HttpGet]
-    public ActionResult<List<Room>> GetAll() => RoomService.GetAll();
+    public ActionResult<List<Room>> GetAll() => Ok(_roomRepository.GetAllRoomsAsync());
 
     /**
      * Get Room with specified ID
@@ -31,13 +34,13 @@ public class RoomController : ControllerBase
     [HttpGet("id")]
     public ActionResult<Room> Get(int id)
     {
-        var room = RoomService.Get(id);
-        if (room == null)
+        var room = _roomRepository.GetRoomAsync(id);
+        if (room.Result != null)
         {
-            return NotFound();
+            return Ok(room);
         }
 
-        return room;
+        return NotFound(id);
     }
 
     /**
@@ -46,7 +49,7 @@ public class RoomController : ControllerBase
     [HttpGet("date")]
     public ActionResult<List<Room>> GetFreeRooms(DateTime date)
     {
-        return RoomService.GetFreeRooms(date);
+        return _roomRepository.GetFreeRooms(date);
     }
     
     /**
@@ -56,8 +59,9 @@ public class RoomController : ControllerBase
     [HttpGet("period")]
     public List<Dictionary<DateTime, Reservation?>> GetByPeriod(DateTime dateTime)
     {
-        var availableRooms = RoomService.GetAllByPeriod(dateTime);
+        // var availableRooms = GetAllByPeriod(dateTime);
         
-        return availableRooms;
+        // return availableRooms;
+        return null;
     }
 }

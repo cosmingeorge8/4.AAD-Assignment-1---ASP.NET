@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using RoomReservations.Interfaces;
 using RoomReservations.Models;
-using RoomReservations.Services;
 
 namespace RoomReservations.Controllers;
 
@@ -14,15 +15,18 @@ namespace RoomReservations.Controllers;
 [Route("[controller]")]
 public class ReservationController : ControllerBase
 {
-    public ReservationController()
+    private readonly IReservationRepository _reservationRepository;
+
+    public ReservationController(IReservationRepository reservationRepository)
     {
+        _reservationRepository = reservationRepository;
     }
    
     /**
      * Get a list of all reservations 
      */
     [HttpGet]
-    public ActionResult<List<Reservation>> GetAll() => ReservationService.GetAll();
+    public ActionResult<List<Reservation>> GetAll() => Ok(_reservationRepository.GetAllReservationsAsync());
 
     /**
      * Get a reservation by ID
@@ -30,13 +34,13 @@ public class ReservationController : ControllerBase
     [HttpGet("id")]
     public ActionResult<Reservation> Get(int id)
     {
-        var reservation = ReservationService.Get(id);
-        if (reservation is null)
+        var reservation = _reservationRepository.GetReservationAsync(id);
+        if (reservation.Result is null)
         {
             return NotFound(id);
         }
 
-        return reservation;
+        return Ok(reservation);
     }
 
     /**
@@ -47,11 +51,16 @@ public class ReservationController : ControllerBase
     [HttpDelete("id")]
     public ActionResult<List<Reservation>> Delete(int id)
     {
-        if (!ReservationService.Delete(id))
+        EntityEntry<Reservation> reservation;
+        try
         {
-            return NotFound();
+           reservation = _reservationRepository.Delete(id);
         }
-        return ReservationService.GetAll();
+        catch (Exception e)
+        {
+            return NotFound(e.Message);
+        }
+        return Ok(reservation);
     }
 
     /**
@@ -61,21 +70,21 @@ public class ReservationController : ControllerBase
      *
      * returns created object
      */
-    [HttpPost]
-    public IActionResult Create(int roomId, DateTime date)
-    {
-        var user = new User();
-        Reservation created;
-
-        try
-        {
-            created = ReservationService.Add(roomId, user, date);
-        }
-        catch (Exception e)
-        {
-            return BadRequest(e.Message);
-        }
-        return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
-    }
+    // [HttpPost]
+    // public IActionResult Create(int roomId, DateTime date)
+    // {
+    //     var user = new User();
+    //     Reservation created;
+    //
+    //     try
+    //     {
+    //         created = ReservationService.Add(roomId, user, date);
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         return BadRequest(e.Message);
+    //     }
+    //     return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
+    // }
 
 }
