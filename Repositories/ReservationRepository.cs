@@ -16,16 +16,25 @@ public class ReservationRepository : IReservationRepository
         _dataContext = dataContext;
     }
 
+    /**
+     * Get a list of all reservations
+     */
     public async Task<List<Reservation>> GetAllReservationsAsync()
     {
         return await _dataContext.Reservations.ToListAsync();
     }
 
+    /**
+     * Get a reservation by ID
+     */
     public async Task<Reservation?> GetReservationAsync(int id)
     {
         return await _dataContext.Reservations.FirstOrDefaultAsync(reservation => reservation.Id == id);
     }
 
+    /**
+     * Delete a reservation
+     */
     public EntityEntry<Reservation> Delete(int id)
     {
         var reservation = GetReservationAsync(id);
@@ -37,6 +46,9 @@ public class ReservationRepository : IReservationRepository
         return  _dataContext.Reservations.Remove(reservation.Result);
     }
     
+    /**
+     * Create a reservation
+     */
     public Reservation CreateReservation(int roomId, User user, DateTime date)
     {
         var room = _dataContext.Rooms.FindAsync(roomId);
@@ -67,6 +79,9 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
+    /**
+     * Add the reservation to room object
+     */
     private  void BookRoom(Room room, Reservation reservation)
     {
         room.AddReservation(reservation);

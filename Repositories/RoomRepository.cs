@@ -17,11 +17,17 @@ public class RoomRepository : IRoomRepository
         InsertIfNull();
     }
     
+    /**
+     * Get a list of all rooms
+     */
     public async Task<List<Room?>> GetAllRoomsAsync()
     {
         return await _dataContext.Rooms.ToListAsync();
     }
 
+    /**
+     * Get room by ID
+     */
     public async Task<Room?> GetRoomAsync(int id)
     {
         return await _dataContext.Rooms.FirstOrDefaultAsync( room => room != null && room.Id == id);
@@ -46,6 +52,9 @@ public class RoomRepository : IRoomRepository
         return rooms;
     }
 
+    /**
+     * Method used to insert hardcoded test values
+     */
     public bool InsertIfNull()
     {
         var room1 = new Room()
