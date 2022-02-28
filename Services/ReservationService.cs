@@ -47,8 +47,11 @@ public static class ReservationService
             throw new Exception("Rooms is booked in " + date);
         }
 
-        var reservation = new Reservation(room, user, date)
+        var reservation = new Reservation
         {
+            Room = room,
+            User = user,
+            Date = date,
             Id = IdCounter++
         };
 
@@ -70,7 +73,6 @@ public static class ReservationService
         }
         reservation.Room.RemoveReservation(reservation);
         return true;
-
     }
     
 }

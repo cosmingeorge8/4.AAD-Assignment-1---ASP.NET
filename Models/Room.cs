@@ -13,13 +13,13 @@ public class Room
      * Floor the room is placed at..
      * Informational only, not used in any logic
      */
-    public int Floor { get; }
+    public int Floor { get; set; }
     
     /**
      * Description of the room..
      * Informational only, not used in any logic
      */
-    public string Description { get; }
+    public string Description { get; set; }
 
     /**
      * Unique identifier
@@ -32,15 +32,7 @@ public class Room
      * @value The actual Reservation object
      */
     private Dictionary<DateTime, Reservation?> _reservations = new();
-
-    /**
-     * Constructor that takes a floor and description
-     */
-    public Room(int floor, string description)
-    {
-        Floor = floor;
-        Description = description;
-    }
+    
 
     /**
      * Get a reservation by date
