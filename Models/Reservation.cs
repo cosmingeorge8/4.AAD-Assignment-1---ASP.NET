@@ -9,14 +9,7 @@
  */
 public class Reservation
 {
-    public Reservation(Room room, User user, DateTime date)
-    {
-        Room = room;
-        User = user;
-        Date = date;
-    }
-
-    /**
+ /**
      * Unique identifier
      */
     public int Id { get; set; }
@@ -24,15 +17,15 @@ public class Reservation
     /**
      * Room that was reserved
      */
-    public Room Room { get; }
+    public Room Room { get; set; }
 
     /**
      * User that made the reservation
      */
-    public User User { get; }
+    public User User { get; set; }
 
     /**
      * Date the reservation was made for
      */
-    public DateTime Date { get; }
+    public DateTime Date { get; set; }
 }
