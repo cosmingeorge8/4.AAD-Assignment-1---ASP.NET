@@ -66,6 +66,7 @@ public class RoomRepository : IRoomRepository
             _dataContext.Rooms.FindAsync(2).Result is not null) return false;
         _dataContext.Rooms.Add(room1);
         _dataContext.Rooms.Add(room2);
+        _dataContext.SaveChanges();
         return true;
 
     }

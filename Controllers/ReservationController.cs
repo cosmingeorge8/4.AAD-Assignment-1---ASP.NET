@@ -70,21 +70,21 @@ public class ReservationController : ControllerBase
      *
      * returns created object
      */
-    // [HttpPost]
-    // public IActionResult Create(int roomId, DateTime date)
-    // {
-    //     var user = new User();
-    //     Reservation created;
-    //
-    //     try
-    //     {
-    //         created = ReservationService.Add(roomId, user, date);
-    //     }
-    //     catch (Exception e)
-    //     {
-    //         return BadRequest(e.Message);
-    //     }
-    //     return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
-    // }
+    [HttpPost]
+    public IActionResult Create(int roomId, DateTime date)
+    {
+        var user = new User();
+        Reservation created;
+    
+        try
+        {
+            created = _reservationRepository.CreateReservation(roomId, user, date);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+        return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
+    }
 
 }

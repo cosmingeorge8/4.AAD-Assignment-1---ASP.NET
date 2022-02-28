@@ -11,4 +11,6 @@ public interface IReservationRepository
     Task<Reservation?> GetReservationAsync(int id);
 
     EntityEntry<Reservation> Delete(int id);
+
+    Reservation CreateReservation(int roomId, User user, DateTime date);
 }
