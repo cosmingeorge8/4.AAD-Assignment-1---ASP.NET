@@ -7,7 +7,7 @@ using RoomReservations.Interfaces;
 using RoomReservations.Models.Utils.Database;
 using RoomReservations.Repositories;
 
-const Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
+// const Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    var path = Environment.GetFolderPath(folder);
-    var dbPath = Path.Join(path, "roomreservation.db");
-    options.UseSqlite($"Data Source={dbPath}");
+    // var path = Environment.GetFolderPath(folder);
+    // var dbPath = Path.Join(path, "roomreservation.db");
+    options.UseSqlite($"Data Source=roomreservation.db");
 });
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();

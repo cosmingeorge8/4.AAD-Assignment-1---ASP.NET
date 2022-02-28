@@ -5,7 +5,7 @@ namespace RoomReservations.Interfaces;
 
 public interface IRoomRepository
 {
-    Task<List<Room?>> GetAllRoomsAsync();
+    Task<List<Room>> GetAllRoomsAsync();
 
     Task<Room?> GetRoomAsync(int id);
 

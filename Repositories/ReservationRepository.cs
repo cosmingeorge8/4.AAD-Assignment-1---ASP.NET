@@ -51,40 +51,37 @@ public class ReservationRepository : IReservationRepository
      */
     public Reservation CreateReservation(int roomId, User user, DateTime date)
     {
-        var room = _dataContext.Rooms.FindAsync(roomId);
+        var room = _dataContext.Rooms.FindAsync(roomId).Result;
         
         if (DateUtil.IsBeforeToday(date))
         {
             throw new Exception("No time travel yet, so no past tense booking");
         }
-        if (room.Result is null)
+        if (room is null)
         {
             throw new Exception("Room not found");
         }
 
-        if (!room.Result.IsFree(date))
+        if (!room.IsFree(date))
         {
             throw new Exception("Rooms is booked in " + date);
         }
 
         var reservation = new Reservation
         {
-            Room = room.Result,
+            Room = room,
             User = user,
             Date = date,
         };
 
-        BookRoom(room.Result, reservation);
+        _dataContext.Reservations.Add(reservation);
+        room.AddReservation(reservation);
+        
+        _dataContext.Rooms.Update(room);
         _dataContext.SaveChanges();
         return reservation;
     }
 
-    /**
-     * Add the reservation to room object
-     */
-    private  void BookRoom(Room room, Reservation reservation)
-    {
-        room.AddReservation(reservation);
-    }
+ 
 
 }

@@ -17,12 +17,12 @@ public class Reservation
     /**
      * Room that was reserved
      */
-    public Room Room { get; set; }
+    public virtual Room Room { get; set; }
 
     /**
      * User that made the reservation
      */
-    public User User { get; set; }
+    public virtual User User { get; set; }
 
     /**
      * Date the reservation was made for

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RoomReservations.Interfaces;
 using RoomReservations.Models;
+using RoomReservations.Repositories;
 
 namespace RoomReservations.Controllers;
 
@@ -73,9 +75,13 @@ public class ReservationController : ControllerBase
     [HttpPost]
     public IActionResult Create(int roomId, DateTime date)
     {
-        var user = new User();
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = UserRepository.Users.Find(u=> u.Username == username);
+        if (user is null)
+        {
+            return NotFound(user);
+        }
         Reservation created;
-    
         try
         {
             created = _reservationRepository.CreateReservation(roomId, user, date);

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace RoomReservations.Models;
@@ -29,6 +30,7 @@ public class User
      * Password
      * user for login
      */
+    [JsonIgnore]
     public string Password { get; set; }
 
     /**

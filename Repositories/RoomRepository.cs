@@ -20,7 +20,7 @@ public class RoomRepository : IRoomRepository
     /**
      * Get a list of all rooms
      */
-    public async Task<List<Room?>> GetAllRoomsAsync()
+    public async Task<List<Room>> GetAllRoomsAsync()
     {
         return await _dataContext.Rooms.ToListAsync();
     }
@@ -30,7 +30,7 @@ public class RoomRepository : IRoomRepository
      */
     public async Task<Room?> GetRoomAsync(int id)
     {
-        return await _dataContext.Rooms.FirstOrDefaultAsync( room => room != null && room.Id == id);
+        return await _dataContext.Rooms.FirstOrDefaultAsync( room => room.Id == id);
     }
 
     
@@ -43,7 +43,7 @@ public class RoomRepository : IRoomRepository
 
         foreach (var room in _dataContext.Rooms)
         {
-            if (room != null && room.IsFree(date))
+            if (room.IsFree(date))
             {
                 rooms.Add(room);
             }
@@ -55,7 +55,7 @@ public class RoomRepository : IRoomRepository
     /**
      * Method used to insert hardcoded test values
      */
-    public bool InsertIfNull()
+    private bool InsertIfNull()
     {
         var room1 = new Room()
         {
