@@ -7,6 +7,10 @@ using RoomReservations.Models.Utils.Database;
 
 namespace RoomReservations.Repositories;
 
+/**
+ * @author Mucalau Cosmin
+ */
+
 public class RoomRepository : IRoomRepository
 {
     private readonly DataContext _dataContext;

@@ -3,6 +3,9 @@ using RoomReservations.Models;
 
 namespace RoomReservations.Interfaces;
 
+/**
+ * @author Mucalau Cosmin
+ */
 public interface IRoomRepository
 {
     Task<List<Room>> GetAllRoomsAsync();

@@ -1,10 +1,15 @@
 ﻿using Castle.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using RoomReservations.Interfaces;
 using RoomReservations.Models;
 using RoomReservations.Models.Utils;
 using RoomReservations.Models.Utils.Database;
 
 namespace RoomReservations.Repositories;
+
+/**
+ * @author Mucalau Cosmin
+ */
 
 public class UserRepository : IUserRepository
 {
@@ -16,15 +21,18 @@ public class UserRepository : IUserRepository
         FillIfNull();
     }
 
+    /**
+     * Initialize DB with some hardcoded values
+     */
     private void FillIfNull()
     {
         if (_dataContext.Users.ToList().IsNullOrEmpty())
         {
-            AddHarcodedUsers();
+            AddHardcodedUsers();
         }
     }
 
-    private void AddHarcodedUsers()
+    private void AddHardcodedUsers()
     {
         List<User> users = new()
     {
@@ -40,29 +48,40 @@ public class UserRepository : IUserRepository
 
 
 
-    public User GetUser(UserLogin userLogin)
-    {
-        var user =  _dataContext.Users.First( user=> user.Username == userLogin.Username && user.Password == userLogin.Password);
-        return user;
+    /**
+     * Get User by credentials
+     */
+    public Task<User> GetUser(UserLogin userLogin)
+    {  
+        return _dataContext.Users.FirstAsync( user=> user.Username == userLogin.Username && user.Password == userLogin.Password);
     }
 
-    public User GetUser(string? username)
+    /**
+     * Get user by username
+     */
+    public Task<User> GetUser(string? username)
     {
-        return _dataContext.Users.First(user => user.Username == username);
+        return _dataContext.Users.FirstAsync(user => user.Username == username);
     }
 
+    /**
+     * delete user by username
+     */
     public void Delete(string? username)
     {
         var user = GetUser(username);
-        if (user is null)
+        if (user.Result is null)
         {
             throw new Exception("User not found");
         }
         
-        _dataContext.Users.Remove(user);
+        _dataContext.Users.Remove(user.Result);
         _dataContext.SaveChanges();
     }
 
+    /**
+     * Update user
+     */
     public void Update(User user)
     {
         _dataContext.Users.Add(user);

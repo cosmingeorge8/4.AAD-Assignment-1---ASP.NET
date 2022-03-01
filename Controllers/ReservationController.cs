@@ -79,14 +79,10 @@ public class ReservationController : ControllerBase
     {
         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = _userRepository.GetUser(username);
-        if (user is null)
-        {
-            return NotFound(user);
-        }
         Reservation created;
         try
         {
-            created = _reservationRepository.CreateReservation(roomId, user, date);
+            created = _reservationRepository.CreateReservation(roomId, user.Result, date);
         }
         catch (Exception e)
         {

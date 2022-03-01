@@ -3,12 +3,14 @@ using RoomReservations.Models.Utils;
 
 namespace RoomReservations.Interfaces;
 
+/**
+ * @author Mucalau Cosmin
+ */
 public interface IUserRepository
 {
-    User? GetUser(UserLogin userLogin);
+    Task<User> GetUser(UserLogin userLogin);
     
-    User? GetUser(string? userLogin);
-
+    Task<User> GetUser(string? userLogin);
 
     void Delete(string? username);
 
