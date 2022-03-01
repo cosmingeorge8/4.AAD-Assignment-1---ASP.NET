@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoomReservations.Interfaces;
 using RoomReservations.Models;
+using RoomReservations.Models.Utils;
 
 namespace RoomReservations.Controllers;
 
@@ -55,11 +56,15 @@ public class RoomController : ControllerBase
      */
     [Authorize]
     [HttpGet("period")]
-    public List<Dictionary<DateTime, Reservation?>> GetByPeriod(DateTime dateTime)
+    public ActionResult<List<Room>> GetByPeriod(DateTime startPeriod, DateTime endPeriod)
     {
-        // var availableRooms = GetAllByPeriod(dateTime);
+        if (!DateUtil.ValidDates(startPeriod, endPeriod))
+        {
+            return BadRequest("Invalid dates");
+        }
         
-        // return availableRooms;
-        return null;
+        var rooms = _roomRepository.GetRoomsByPeriod(startPeriod, endPeriod);
+        
+        return Ok(rooms);
     }
 }
