@@ -18,10 +18,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 {
     // var path = Environment.GetFolderPath(folder);
     // var dbPath = Path.Join(path, "roomreservation.db");
-    options.UseSqlite($"Data Source=roomreservation.db");
+    options.UseLazyLoadingProxies()
+        .UseSqlite($"Data Source=roomreservation.db");
 });
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

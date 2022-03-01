@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RoomReservations.Interfaces;
 using RoomReservations.Models;
-using RoomReservations.Repositories;
 
 namespace RoomReservations.Controllers;
 
@@ -19,9 +18,12 @@ public class ReservationController : ControllerBase
 {
     private readonly IReservationRepository _reservationRepository;
 
-    public ReservationController(IReservationRepository reservationRepository)
+    private readonly IUserRepository _userRepository;
+
+    public ReservationController(IReservationRepository reservationRepository, IUserRepository userRepository)
     {
         _reservationRepository = reservationRepository;
+        _userRepository = userRepository;
     }
    
     /**
@@ -76,7 +78,7 @@ public class ReservationController : ControllerBase
     public IActionResult Create(int roomId, DateTime date)
     {
         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = UserRepository.Users.Find(u=> u.Username == username);
+        var user = _userRepository.GetUser(username);
         if (user is null)
         {
             return NotFound(user);
