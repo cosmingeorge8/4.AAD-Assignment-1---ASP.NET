@@ -6,7 +6,7 @@
 
 public static class DateUtil
 {
-    public static DateTime GetToday()
+    private static DateTime GetToday()
     {
         return DateTime.Today;
     }
@@ -24,5 +24,10 @@ public static class DateUtil
     public static bool IsBeforeToday(DateTime date)
     {
         return date.CompareTo(GetToday()) < 0;
+    }
+
+    public static bool ValidDates(DateTime startPeriod, DateTime endPeriod)
+    {
+        return endPeriod < startPeriod;
     }
 }
