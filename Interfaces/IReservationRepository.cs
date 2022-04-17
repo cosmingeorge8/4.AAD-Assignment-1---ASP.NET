@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RoomReservations.Models;
 
 namespace RoomReservations.Interfaces;
 
+/**
+ * @author Mucalau Cosmin
+ */
 public interface IReservationRepository
 {
     Task<List<Reservation>> GetAllReservationsAsync();

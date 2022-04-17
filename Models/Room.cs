@@ -25,14 +25,14 @@ public class Room
      * Unique identifier
      */
     public int Id {get;set;}
-    
+
     /**
      * Map to store the reservations made for this room
      * @key DateTime the date the reservation was made
      * @value The actual Reservation object
      */
-    private Dictionary<DateTime, Reservation?> _reservations = new();
-    
+    private Dictionary<DateTime, Reservation?> Reservations { get; } = new();
+
 
     /**
      * Get a reservation by date
@@ -40,7 +40,7 @@ public class Room
      */
     private Reservation? GetByDate(DateTime date)
     {
-        return _reservations.ContainsKey(date) ? _reservations[date] : null;
+        return Reservations.ContainsKey(date) ? Reservations[date] : null;
     }
     
     /**
@@ -54,21 +54,14 @@ public class Room
     }
 
     /**
-     * TODO work in progress
      * Return the status of a room for a time period
      */
-    public Dictionary<DateTime, Reservation?> GetRoomStatus(DateTime dateTime)
+    public void GetRoomStatus(DateTime startDate, DateTime endDate)
     {
-        var date = DateTime.Now;
-        var reservations = new Dictionary<DateTime, Reservation?>();
-        
-        while (date < dateTime)
+        foreach (var reservationsKey in Reservations.Keys.Where(reservationsKey => !(startDate <= reservationsKey && reservationsKey <= endDate)))
         {
-            reservations[date] = GetByDate(date);
-            date = date.AddDays(1);
+            Reservations.Remove(reservationsKey);
         }
-
-        return reservations;
     }
 
     /**
@@ -77,7 +70,7 @@ public class Room
      */
     public void AddReservation(Reservation reservation)
     {
-        _reservations.Add(reservation.Date,reservation);
+        Reservations.Add(reservation.Date,reservation);
     }
 
     /**
@@ -85,7 +78,7 @@ public class Room
      */
     public void RemoveReservation(Reservation reservation)
     {
-        _reservations.Remove(reservation.Date);
+        Reservations.Remove(reservation.Date);
     }
 
     /**
@@ -93,6 +86,6 @@ public class Room
      */
     public IEnumerable<Reservation?> GetAllReservations()
     {
-        return _reservations.Values.ToList();
+        return Reservations.Values.ToList();
     }
 }

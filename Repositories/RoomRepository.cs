@@ -1,11 +1,15 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RoomReservations.Interfaces;
 using RoomReservations.Models;
 using RoomReservations.Models.Utils.Database;
 
 namespace RoomReservations.Repositories;
+
+/**
+ * @author Mucalau Cosmin
+ */
 
 public class RoomRepository : IRoomRepository
 {
@@ -39,14 +43,20 @@ public class RoomRepository : IRoomRepository
      */
     public ActionResult<List<Room>> GetFreeRooms(DateTime date)
     {
-        var rooms = new List<Room>();
+        return _dataContext.Rooms.Where(room => room.IsFree(date)).ToList();
+    }
 
-        foreach (var room in _dataContext.Rooms)
+    public List<Room> GetRoomsByPeriod(DateTime startPeriod, DateTime endPeriod)
+    {
+        var rooms = GetAllRoomsAsync().Result;
+        if (rooms.IsNullOrEmpty())
         {
-            if (room.IsFree(date))
-            {
-                rooms.Add(room);
-            }
+            throw new Exception("No rooms found");
+        }
+        
+        foreach (var room in rooms)
+        {
+            room.GetRoomStatus(startPeriod, endPeriod);
         }
 
         return rooms;

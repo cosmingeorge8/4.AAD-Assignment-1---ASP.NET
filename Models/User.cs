@@ -13,10 +13,13 @@ namespace RoomReservations.Models;
 public class User
 {
 
+ /**
+  * Unique identifier
+  */
    public int Id { get; set; }
 
- /**
-     * Username, unique identifier of an user
+   /**
+     * Username
      */
     public string Username { get; set; }
     

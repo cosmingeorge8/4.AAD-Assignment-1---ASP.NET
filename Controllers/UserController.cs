@@ -1,10 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RoomReservations.Interfaces;
 using RoomReservations.Models;
 using RoomReservations.Models.Utils;
-using RoomReservations.Services;
 
 namespace RoomReservations.Controllers;
 
@@ -22,12 +23,15 @@ public class UserController : ControllerBase
      */
     private readonly IConfiguration _configuration;
 
+    private readonly IUserRepository _userRepository;
+
     /**
      * Constructor gets called by the framework, used to initialize the IConfiguration field.
      */
-    public UserController(IConfiguration configuration)
+    public UserController(IConfiguration configuration, IUserRepository userRepository)
     {
         _configuration = configuration;
+        _userRepository = userRepository;
     }
     
     /**
@@ -44,20 +48,59 @@ public class UserController : ControllerBase
         /*
          * Try to get a user with matching credential
          */
-        var user = UserService.Get(userLogin);
-
-        /*
-         * If none found, throw NotFound()
-         */
-        if (user is null) return NotFound();
-
+        var user = _userRepository.GetUser(userLogin);
+        
         /*
          * If this statement is reached, generate a JWT and return it to the user
          */
-        var token = GenerateToken(user);
+        var token = GenerateToken(user.Result);
 
         return Ok(token);
 
+    }
+
+    /**
+     * Delete user
+     *
+     */
+    [Authorize]
+    [HttpDelete]
+    public IActionResult Delete()
+    {
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        try
+        {
+            _userRepository.Delete(username);
+        }
+        catch (Exception e)
+        {
+            return NotFound(e);
+        }
+
+        return Ok();
+    }
+
+    /**
+     * Update user
+     */
+    [Authorize]
+    [HttpPatch]
+    public IActionResult Update(User user)
+    {
+        var username = user.Username;
+        if (username.IsNullOrEmpty())
+        {
+            return BadRequest();
+        }
+
+        var dbUser = _userRepository.GetUser(username);
+
+        // Make sure we have the proper ID before we update
+        user.Id = dbUser.Id;
+        
+        _userRepository.Update(user);
+        return Ok();
     }
 
     /**
@@ -69,7 +112,7 @@ public class UserController : ControllerBase
          * Get the JWT key
          */
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-            _configuration.GetSection("Jwt:Key").Value));
+            _configuration.GetSection("Jwt:Key").Value ?? throw new InvalidOperationException()));
         
         /*
          * Initialize claims
