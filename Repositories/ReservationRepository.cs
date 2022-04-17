@@ -35,28 +35,30 @@ public class ReservationRepository : IReservationRepository
     /**
      * Delete a reservation
      */
-    public EntityEntry<Reservation> Delete(int id)
+    public async Task<Reservation> Delete(int id)
     {
-        var reservation = GetReservationAsync(id);
-        if (reservation.Result is null)
+        var reservation = await GetReservationAsync(id);
+        if (reservation is null)
         {
             throw new Exception("Reservation with id not found");
         }
-        _dataContext.SaveChanges();
-        return  _dataContext.Reservations.Remove(reservation.Result);
+
+        _dataContext.Reservations.Remove(reservation);
+        return reservation;
     }
-    
+
     /**
      * Create a reservation
      */
     public Reservation CreateReservation(int roomId, User user, DateTime date)
     {
         var room = _dataContext.Rooms.FindAsync(roomId).Result;
-        
+
         if (DateUtil.IsBeforeToday(date))
         {
             throw new Exception("No time travel yet, so no past tense booking");
         }
+
         if (room is null)
         {
             throw new Exception("Room not found");
@@ -76,12 +78,9 @@ public class ReservationRepository : IReservationRepository
 
         _dataContext.Reservations.Add(reservation);
         room.AddReservation(reservation);
-        
+
         _dataContext.Rooms.Update(room);
         _dataContext.SaveChanges();
         return reservation;
     }
-
- 
-
 }

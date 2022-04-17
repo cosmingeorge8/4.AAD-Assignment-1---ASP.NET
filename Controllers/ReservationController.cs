@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RoomReservations.Interfaces;
 using RoomReservations.Models;
 using RoomReservations.Repositories;
@@ -11,7 +10,6 @@ namespace RoomReservations.Controllers;
 /**
  * @author Mucalau Cosmin
  */
-
 [Authorize]
 [ApiController]
 [Route("[controller]")]
@@ -23,7 +21,7 @@ public class ReservationController : ControllerBase
     {
         _reservationRepository = reservationRepository;
     }
-   
+
     /**
      * Get a list of all reservations 
      */
@@ -51,18 +49,29 @@ public class ReservationController : ControllerBase
      * Returns the list of remaining rooms
      */
     [HttpDelete("id")]
-    public ActionResult<List<Reservation>> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        EntityEntry<Reservation> reservation;
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = UserRepository.Users.Find(u => u.Username == username);
+        if (user is null)
+        {
+            return NotFound(user);
+        }
+
         try
         {
-           reservation = _reservationRepository.Delete(id);
+            var reservation = await _reservationRepository.GetReservationAsync(id);
+            if (reservation.User.Id.Equals(user.Id))
+            {
+                await _reservationRepository.Delete(reservation.Id);
+            }
+
+            return Ok(reservation);
         }
         catch (Exception e)
         {
             return NotFound(e.Message);
         }
-        return Ok(reservation);
     }
 
     /**
@@ -76,11 +85,12 @@ public class ReservationController : ControllerBase
     public IActionResult Create(int roomId, DateTime date)
     {
         var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var user = UserRepository.Users.Find(u=> u.Username == username);
+        var user = UserRepository.Users.Find(u => u.Username == username);
         if (user is null)
         {
             return NotFound(user);
         }
+
         Reservation created;
         try
         {
@@ -90,7 +100,7 @@ public class ReservationController : ControllerBase
         {
             return BadRequest(e.Message);
         }
+
         return CreatedAtAction(nameof(Create), new {id = created.Id}, created);
     }
-
 }

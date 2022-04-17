@@ -53,13 +53,13 @@ public class RoomController : ControllerBase
     /**
      * Returns a list of al the rooms for the given period and their status
      */
-    [Authorize]
-    [HttpGet("period")]
-    public List<Dictionary<DateTime, Reservation?>> GetByPeriod(DateTime dateTime)
-    {
-        // var availableRooms = GetAllByPeriod(dateTime);
-        
-        // return availableRooms;
-        return null;
-    }
+    // [Authorize]
+    // [HttpGet("period")]
+    // public List<Dictionary<DateTime, Reservation?>> GetByPeriod(Duration dateTime)
+    // {
+    //     var availableRooms = GetAllByPeriod(dateTime);
+    //     
+    //     return availableRooms;
+    //     return null;
+    // }
 }
